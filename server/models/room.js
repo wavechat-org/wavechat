@@ -9,18 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Room.belongsTo(models.User, { foreignKey: "user1Id" });
-      Room.belongsTo(models.User, { foreignKey: "user2Id" });
-      Room.belongsTo(models.User, { foreignKey: "createdRoomId" });
+      Room.belongsTo(models.User, { foreignKey: "creatorId" });
+      Room.belongsTo(models.User, { foreignKey: "participantId" });
     }
   }
   Room.init(
     {
       roomName: DataTypes.STRING,
       roomImg: DataTypes.STRING,
-      createdRoomId: DataTypes.STRING,
-      user1Id: DataTypes.INTEGER,
-      user2Id: DataTypes.INTEGER,
+      creatorId: DataTypes.INTEGER,
+      participantId: DataTypes.INTEGER,
     },
     {
       sequelize,

@@ -16,7 +16,7 @@ module.exports = {
       roomImg: {
         type: Sequelize.STRING,
       },
-      createdRoomId: {
+      creatorId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -24,15 +24,7 @@ module.exports = {
           key: "id",
         },
       },
-      user1Id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
-      user2Id: {
+      participantId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
