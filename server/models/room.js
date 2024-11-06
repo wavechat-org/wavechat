@@ -11,11 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Room.belongsTo(models.User, { foreignKey: "user1Id" });
       Room.belongsTo(models.User, { foreignKey: "user2Id" });
+      Room.belongsTo(models.User, { foreignKey: "createdRoomId" });
     }
   }
   Room.init(
     {
       roomName: DataTypes.STRING,
+      roomImg: DataTypes.STRING,
+      createdRoomId: DataTypes.STRING,
       user1Id: DataTypes.INTEGER,
       user2Id: DataTypes.INTEGER,
     },
@@ -24,5 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Room",
     }
   );
+  Room.beforeCreate((room) => {
+    room.roomImg =
+      "https://o-cdn-cas.oramiland.com/parenting/images/image_7_HYvLsGH.width-800.format-webp.webp";
+  });
   return Room;
 };

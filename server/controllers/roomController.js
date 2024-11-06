@@ -1,5 +1,10 @@
-class roomController {
+class RoomController {
   static async create(req, res, next) {
+    try {
+    } catch (error) {}
+  }
+
+  static async readAllRoom(req, res, next) {
     try {
     } catch (error) {}
   }
@@ -10,4 +15,4 @@ class roomController {
   }
 }
 
-module.exports = roomController;
+module.exports = RoomController;
