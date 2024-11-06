@@ -1,4 +1,4 @@
-class messageController {
+class MessageController {
   static async sendMessage(req, res, next) {
     try {
     } catch (error) {}
@@ -8,11 +8,6 @@ class messageController {
     try {
     } catch (error) {}
   }
-
-  static async deleteMessage(req, res, next) {
-    try {
-    } catch (error) {}
-  }
 }
 
-module.exports = messageController;
+module.exports = MessageController;

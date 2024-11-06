@@ -13,6 +13,17 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      roomImg: {
+        type: Sequelize.STRING,
+      },
+      createdRoomId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+      },
       user1Id: {
         type: Sequelize.INTEGER,
         allowNull: false,
