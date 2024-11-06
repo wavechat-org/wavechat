@@ -18,7 +18,7 @@ const authorization = async (req, res, next) => {
       throw { name: "NotFound" };
     }
 
-    if (user.id !== room.createdRoomId) {
+    if (user.id !== room.creatorId) {
       throw { name: "Forbidden" };
     }
     next();

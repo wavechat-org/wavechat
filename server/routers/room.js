@@ -6,7 +6,8 @@ const authorization = require("../middlewares/authorizationRoom");
 
 router.get("/", RoomController.readAllRoom);
 router.post("/", RoomController.create);
-router.delete("/:roomId", authorization, RoomController.delete);
+router.delete("/:id", authorization, RoomController.delete);
+// router.post("/join/:roomId", )
 router.get("/message/:roomId", MessageControllre.getMessage);
 router.post("/message/:roomId", MessageControllre.sendMessage);
 
