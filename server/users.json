@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "username": "user1",
+    "email": "user1@mail.com",
+    "password": "user1",
+    "profileImg": "https://cdn.vectorstock.com/i/500p/53/42/user-member-avatar-face-profile-icon-vector-22965342.jpg",
+    "gender": "male",
+    "createdAt": "2024-11-01T08:00:00Z",
+    "updatedAt": "2024-11-01T08:00:00Z"
+  },
+  {
+    "id": 2,
+    "username": "user2",
+    "email": "user2@mail.com",
+    "password": "user2",
+    "profileImg": "https://cdn.vectorstock.com/i/500p/53/42/user-member-avatar-face-profile-icon-vector-22965342.jpg",
+    "gender": "female",
+    "createdAt": "2024-11-01T08:05:00Z",
+    "updatedAt": "2024-11-01T08:05:00Z"
+  }
+]
