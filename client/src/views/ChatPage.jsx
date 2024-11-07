@@ -1,109 +1,132 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-export default function ChatPage() {
+export default function ChatPage({ socket, base_url }) {
   const [sendMessage, setSendMessage] = useState("");
   const [message, setMessage] = useState([]);
+  const { id } = useParams();
+  const [room, setRoom] = useState({});
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState({});
+  console.log(profile);
+
+  async function fetchRoomById() {
+    try {
+      const { data } = await axios.get(`${base_url}/room/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.access_token}`,
+        },
+      });
+      setRoom(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchProfile() {
+    try {
+      const { data } = await axios.get(`${base_url}/profile`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      setProfile(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    // mengirim data ke server
-    socket.emit("message:new", sendMessage);
-    console.log(sendMessage, "<<<<<<<<<<<<<<<<<< message sent");
+    socket.emit("message:new", {
+      roomId: id,
+      message: sendMessage,
+      username: profile.username,
+    });
+    setSendMessage(""); // Clear input after sending
+  }
+
+  function handleEndChat() {
+    navigate("/");
   }
 
   useEffect(() => {
-    // setting auth buat socketnya
-    console.log(localStorage, "<<<<<<<<<<<<<<<<< localStorage");
+    fetchRoomById();
+    socket.emit("join:room", id);
+
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
     socket.auth = {
-      // ini username nya dpt dari setItem LocalStorage di login page
       username: localStorage.username,
     };
-    // supaya bisa set auth dl sebelum connect
     socket.connect();
 
-    // menerima "message:update" dari server
-
-    // ini message nya ga numpuk ya?
     socket.on("message:update", (newMessage) => {
-      setMessage((current) => {
-        return [...current, newMessage];
-      });
+      console.log(newMessage, "ini message baru");
+      setMessage((current) => [...current, newMessage]);
     });
 
     return () => {
-      // mematikan socket?
       socket.off("message:update");
-      //mematikan koneksi socket ?
       socket.disconnect();
     };
   }, []);
 
   return (
-    <>
-      <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-base-200 text-gray-800 p-10">
-        <div className="flex flex-col flex-grow w-full max-w-xl bg-base-100 shadow-xl rounded-lg overflow-hidden">
-          {/* <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-                        <div className="chat chat-start flex flex-col">
-                            <div>Raditya Dika</div>
-                            <div className="chat-bubble chat-bubble-accent">Bayi ambil tanganku</div>
-                        </div>
-                        <div className="chat chat-end flex flex-col">
-                            <div>You</div>
-                            <div className="chat-bubble chat-bubble-accent">Aku mau kamu jadi suamiku</div>
-                        </div>
-                        <div className="chat chat-start flex flex-col">
-                            <div>Raditya Dika</div>
-                            <div className="chat-bubble chat-bubble-accent">Karena kamu manusia besiku</div>
-                        </div>
-                        <div className="chat chat-end flex flex-col">
-                            <div>You</div>
-                            <div className="chat-bubble chat-bubble-accent">Dan aku cinta kamu 3000</div>
-                        </div>
-                    </div> */}
-
-          <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-            {message.map((msg, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    msg.from == localStorage.username
-                      ? "chat chat-start flex flex-col"
-                      : "chat chat-end flex flex-col"
-                  }
-                >
-                  <div>
-                    {msg.from === localStorage.username ? "you" : msg.from}{" "}
-                  </div>
-                  <div className="chat-bubble chat-bubble-accent">
-                    {msg.message}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <form className="bg-accent p-4 flex flex-row" onSubmit={handleSubmit}>
-            <input
-              onChange={(e) => setSendMessage(e.target.value)}
-              className="flex items-center w-full rounded px-3"
-              type="text"
-              placeholder="Type your message…"
-            />
-            <button className="btn btn-base-100 ml-4" type="submit">
-              Send
-            </button>
-          </form>
+    <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-base-200 text-gray-800 p-10">
+      <div className="flex flex-col flex-grow w-full max-w-xl bg-base-100 shadow-xl rounded-lg overflow-hidden">
+        {/* Room Name */}
+        <div className="text-center p-4  bg-blue-700 ">
+          <h2 className="text-2xl font-semibold text-white">
+            {room.roomName || "Loading room..."}
+          </h2>
         </div>
-        <button
-          className="btn btn-error mt-10 w-full max-w-xl"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
+
+        {/* Message List */}
+        <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
+          {message.map((msg, index) => (
+            <div
+              key={index}
+              className={
+                msg.from === profile.username
+                  ? "chat chat-start flex flex-col"
+                  : "chat chat-end flex flex-col"
+              }
+            >
+              <div>{msg.from === profile.username ? "You" : msg.from}</div>
+              <div className="chat-bubble chat-bubble-accent">
+                {msg.message}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Input Form */}
+        <form className="bg-accent p-4 flex flex-row" onSubmit={handleSubmit}>
+          <input
+            value={sendMessage}
+            onChange={(e) => setSendMessage(e.target.value)}
+            className="flex items-center w-full rounded px-3"
+            type="text"
+            placeholder="Type your message…"
+          />
+          <button className="btn btn-base-100 ml-4" type="submit">
+            Send
+          </button>
+        </form>
       </div>
-    </>
+
+      {/* End Chat Button */}
+      <button
+        className="btn btn-error mt-10 w-full max-w-xl"
+        onClick={handleEndChat}
+      >
+        End Chat
+      </button>
+    </div>
   );
 }

@@ -18,7 +18,7 @@ const base_url = "http://localhost:3000";
 const router = createBrowserRouter([
   {
     path: "/register",
-    element: <RegisterPage socket={socket} />,
+    element: <RegisterPage socket={socket} base_url={base_url} />,
   },
   {
     path: "/login",
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         return null;
       }
     },
-    element: <LoginPage socket={socket} />,
+    element: <LoginPage socket={socket} base_url={base_url} />,
   },
 
   {
@@ -68,19 +68,19 @@ const router = createBrowserRouter([
             return null;
           }
         },
-        element: <HomePage socket={socket} />,
+        element: <HomePage socket={socket} base_url={base_url} />,
       },
       {
         path: "/add-room",
-        element: <AddPage socket={socket} />,
+        element: <AddPage socket={socket} base_url={base_url} />,
       },
       {
-        path: "/chat",
-        element: <ChatPage socket={socket} />,
+        path: "/room/:id",
+        element: <ChatPage socket={socket} base_url={base_url} />,
       },
       {
         path: "/upload",
-        element: <ProfilePage socket={socket} />,
+        element: <ProfilePage socket={socket} base_url={base_url} />,
       },
     ],
   },

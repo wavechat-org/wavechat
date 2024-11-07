@@ -1,38 +1,36 @@
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Card({ base_url, room }) {
-  async function handleChat() {
-    try {
-    } catch (error) {
-      console.error("Error:", error);
-    }
+export default function Card({ room }) {
+  const navigate = useNavigate();
+
+  function handleClick(id) {
+    navigate(`/room/${id}`);
   }
 
   return (
-    <div className="card bg-gradient-to-br from-blue-500 to-blue-800 text-white p-6 rounded-xl shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-2 m-4 w-64 max-w-xs">
+    <div className="dark card bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-xl shadow-lg transition-transform transform hover:-translate-y-2 hover:shadow-2xl">
       {/* Image Section */}
-      <figure className="overflow-hidden rounded-lg mb-4">
+      <figure className="overflow-hidden rounded-t-lg">
         <img
           src={room.roomImg}
           alt={room.roomName}
-          className="w-full h-40 object-cover transition-transform duration-300 hover:scale-105"
+          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
         />
       </figure>
 
       {/* Content Section */}
-      <div className="text-center">
-        <h2 className="text-lg font-bold text-yellow-400 truncate">
+      <div className="p-4 text-center">
+        <h2 className="text-lg font-bold text-yellow-300 truncate">
           {room.roomName}
         </h2>
 
         {/* Button Section */}
         <div className="mt-4">
           <button
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full shadow-md transition duration-300 transform hover:scale-105"
-            onClick={handleChat}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-5 rounded-full shadow-md transition-transform duration-300 transform hover:scale-105"
+            onClick={() => handleClick(room.id)}
           >
-            Dating Now
+            Join Room
           </button>
         </div>
       </div>

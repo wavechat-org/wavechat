@@ -1,6 +1,5 @@
 import Card from "../components/Card";
 import axios from "axios";
-import loadingAnimation from "../components/assets/Double Ring@1x-1.0s-200px-200px.svg";
 import { useEffect, useState } from "react";
 
 export default function HomePage({ base_url }) {
@@ -15,8 +14,6 @@ export default function HomePage({ base_url }) {
           Authorization: `Bearer ${localStorage.access_token}`,
         },
       });
-      console.log(data, "<<<<<<<<<<<<<<<< data");
-
       setRooms(data);
     } catch (error) {
       console.log(error);
@@ -30,18 +27,23 @@ export default function HomePage({ base_url }) {
   }, []);
 
   return (
-    <section>
-      <div className="d-flex flex-wrap gap-3 jutify-content-center py-5">
-        {rooms.map((room) => {
-          return (
-            <Card
-              key={room.id}
-              room={room}
-              base_url={base_url}
-              fetchRooms={fetchRooms}
+    <section className="py-10 bg-gray-100 min-h-screen">
+      <div className="container mx-auto px-4">
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <img
+              // src={loadingAnimation}
+              alt="Loading..."
+              className="w-20 h-20"
             />
-          );
-        })}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {rooms.map((room) => (
+              <Card key={room.id} room={room} base_url={base_url} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
