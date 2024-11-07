@@ -1,8 +1,6 @@
-import {
-  createBrowserRouter,
-  redirect,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
+
+import { io } from "socket.io-client";
 import LoginPage from "../views/LoginPage";
 import RegisterPage from "../views/RegisterPage";
 import BaseLayout from "../views/BaseLayout";
@@ -12,12 +10,15 @@ import ChatPage from "../views/ChatPage";
 import ProfilePage from "../views/ProfilePage";
 import Toastify from "toastify-js";
 
+const socket = io("http://localhost:3000", {
+  autoConnect: false,
+});
 const base_url = "http://localhost:3000";
 
 const router = createBrowserRouter([
   {
     path: "/register",
-    element: <RegisterPage base_url={base_url} />,
+    element: <RegisterPage socket={socket} base_url={base_url} />,
   },
   {
     path: "/login",
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
         return null;
       }
     },
-    element: <LoginPage base_url={base_url} />,
+    element: <LoginPage socket={socket} base_url={base_url} />,
   },
 
   {
@@ -67,15 +68,19 @@ const router = createBrowserRouter([
             return null;
           }
         },
-        element: <HomePage base_url={base_url} />,
+        element: <HomePage socket={socket} base_url={base_url} />,
       },
       {
         path: "/add-room",
-        element: <AddPage base_url={base_url} />,
+        element: <AddPage socket={socket} base_url={base_url} />,
+      },
+      {
+        path: "/room/:id",
+        element: <ChatPage socket={socket} base_url={base_url} />,
       },
       {
         path: "/upload",
-        element: <ProfilePage base_url={base_url} />,
+        element: <ProfilePage socket={socket} base_url={base_url} />,
       },
     ],
   },

@@ -9,16 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Room.belongsTo(models.User, { foreignKey: "creatorId" });
-      Room.belongsTo(models.User, { foreignKey: "participantId" });
+      Room.hasMany(models.Message, { foreignKey: "roomId" });
     }
   }
   Room.init(
     {
       roomName: DataTypes.STRING,
       roomImg: DataTypes.STRING,
-      creatorId: DataTypes.INTEGER,
-      participantId: DataTypes.INTEGER,
     },
     {
       sequelize,
@@ -27,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Room.beforeCreate((room) => {
     room.roomImg =
-      "https://o-cdn-cas.oramiland.com/parenting/images/image_7_HYvLsGH.width-800.format-webp.webp";
+      "https://w7.pngwing.com/pngs/562/813/png-transparent-computer-icons-discussion-group-reunion-miscellaneous-text-conversation.png";
   });
   return Room;
 };

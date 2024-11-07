@@ -1,44 +1,36 @@
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function Card({ base_url, room }) {
-  async function handleChat() {
-    try {
-      // Implement chat functionality here if needed
-    } catch (error) {
-      console.error("Error:", error);
-    }
+export default function Card({ room }) {
+  const navigate = useNavigate();
+
+  function handleClick(id) {
+    navigate(`/room/${id}`);
   }
 
   return (
-    <div className="card bg-gradient-to-br from-blue-500 to-blue-900 text-gray-100 p-4 rounded-xl shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:-translate-y-2 m-4 w-72">
+    <div className="dark card bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-xl shadow-lg transition-transform transform hover:-translate-y-2 hover:shadow-2xl">
       {/* Image Section */}
-      <figure className="relative overflow-hidden rounded-lg shadow-md transition-transform duration-300">
+      <figure className="overflow-hidden rounded-t-lg">
         <img
           src={room.roomImg}
           alt={room.roomName}
-          className="w-full h-48 object-cover rounded-t-lg transition-transform duration-300 hover:scale-105"
+          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-t-lg">
-          <span className="text-lg font-bold text-white bg-yellow-500 bg-opacity-80 px-3 py-1 rounded-lg">
-            {room.roomName}
-          </span>
-        </div>
       </figure>
 
       {/* Content Section */}
-      <div className="card-body text-center p-4">
-        <h2 className="text-xl font-semibold mb-2 text-yellow-400 line-clamp-1">
+      <div className="p-4 text-center">
+        <h2 className="text-lg font-bold text-yellow-300 truncate">
           {room.roomName}
         </h2>
 
         {/* Button Section */}
-        <div className="flex justify-center mt-4">
+        <div className="mt-4">
           <button
-            className="bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transform transition duration-300"
-            onClick={handleChat}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-5 rounded-full shadow-md transition-transform duration-300 transform hover:scale-105"
+            onClick={() => handleClick(room.id)}
           >
-            Dating Now
+            Join Room
           </button>
         </div>
       </div>

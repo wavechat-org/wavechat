@@ -2,9 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiPlusCircle, FiUser } from "react-icons/fi"; // Import icons
 import { MdMenu } from "react-icons/md"; // Import menu icon
 import logo from "../assets/logo.png";
+import Button from "./Button";
+import ThemeContext from "../contexts/ThemeContext";
+import { useContext } from "react";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const theme = useContext(ThemeContext);
 
   function handleLogout() {
     localStorage.clear();
@@ -12,7 +16,9 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-gradient-to-r from-blue-500 to-gray-900 shadow-lg">
+    <nav
+      className={`bg-gradient-to-r from-blue-500 to-gray-900 shadow-lg ${theme.theme}`}
+    >
       <div className="container mx-auto flex justify-between items-center p-4">
         {/* Logo and Menu Button */}
         <div className="flex items-center space-x-4">
@@ -61,6 +67,10 @@ export default function Navbar() {
               <FiUser size={20} className="mr-2" />
               Profile
             </Link>
+            <div>
+              <Button />
+            </div>
+
             <button
               className="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200"
               onClick={handleLogout}
