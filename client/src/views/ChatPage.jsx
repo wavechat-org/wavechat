@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -10,7 +10,7 @@ export default function ChatPage({ socket, base_url }) {
   const [room, setRoom] = useState({});
   const navigate = useNavigate();
   const [profile, setProfile] = useState({});
-  console.log(profile);
+  const messageEndRef = useRef(null); // Add ref for message container
 
   async function fetchRoomById() {
     try {
@@ -55,7 +55,6 @@ export default function ChatPage({ socket, base_url }) {
   useEffect(() => {
     fetchRoomById();
     socket.emit("join:room", id);
-
     fetchProfile();
   }, []);
 
@@ -66,7 +65,6 @@ export default function ChatPage({ socket, base_url }) {
     socket.connect();
 
     socket.on("message:update", (newMessage) => {
-      console.log(newMessage, "ini message baru");
       setMessage((current) => [...current, newMessage]);
     });
 
@@ -76,11 +74,18 @@ export default function ChatPage({ socket, base_url }) {
     };
   }, []);
 
+  // Scroll to bottom when new message arrives
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [message]);
+
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-base-200 text-gray-800 p-10">
       <div className="flex flex-col flex-grow w-full max-w-xl bg-base-100 shadow-xl rounded-lg overflow-hidden">
         {/* Room Name */}
-        <div className="text-center p-4  bg-blue-700 ">
+        <div className="text-center p-4 bg-blue-700 ">
           <h2 className="text-2xl font-semibold text-white">
             {room.roomName || "Loading room..."}
           </h2>
@@ -93,8 +98,8 @@ export default function ChatPage({ socket, base_url }) {
               key={index}
               className={
                 msg.from === profile.username
-                  ? "chat chat-start flex flex-col"
-                  : "chat chat-end flex flex-col"
+                  ? "chat chat-end flex flex-col"
+                  : "chat chat-start flex flex-col"
               }
             >
               <div>{msg.from === profile.username ? "You" : msg.from}</div>
@@ -103,6 +108,8 @@ export default function ChatPage({ socket, base_url }) {
               </div>
             </div>
           ))}
+          {/* Reference element to scroll to */}
+          <div ref={messageEndRef} />
         </div>
 
         {/* Input Form */}
