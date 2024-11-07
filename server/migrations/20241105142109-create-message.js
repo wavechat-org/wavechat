@@ -17,7 +17,7 @@ module.exports = {
           key: "id",
         },
       },
-      senderId: {
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {

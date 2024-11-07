@@ -1,4 +1,4 @@
-const { Message } = require("../models/index");
+const { Message, User, Room } = require("../models/index");
 
 class MessageController {
   static async sendMessage(req, res, next) {
@@ -7,20 +7,13 @@ class MessageController {
       const { userId } = req.loginInfo;
       const { content } = req.body;
 
-      if (!content) {
-        throw { name: "BadRequest", message: "Message content is required" };
-      }
-
       const newMessage = await Message.create({
         roomId,
-        senderId: userId,
+        userId,
         content,
       });
 
-      res.status(201).json({
-        message: "Message sent successfully",
-        message: newMessage,
-      });
+      res.status(201).json(newMessage);
     } catch (error) {
       console.log(error);
       next(error);
@@ -30,22 +23,25 @@ class MessageController {
   // Get all messages for a room
   static async getMessage(req, res, next) {
     try {
-      const { roomId } = req.params; // Get roomId from URL parameters
-
-      // Fetch all messages for the specified room
+      const { roomId } = req.params;
       const messages = await Message.findAll({
+        include: [
+          {
+            model: User,
+            attributes: ["username"], // Menampilkan hanya username dan email
+          },
+          {
+            model: Room,
+            attributes: ["roomName"], // Menampilkan nama room
+          },
+        ],
         where: {
-          roomId, // Filter messages by roomId
+          roomId,
         },
-        order: [["createdAt", "ASC"]], // Order messages by creation time in ascending order
+        order: [["createdAt", "ASC"]],
       });
 
-      // If no messages are found, return an empty array
-      if (messages.length === 0) {
-        return res.status(200).json({ message: "No messages yet" });
-      }
-
-      res.status(200).json(messages); // Return the list of messages
+      res.status(200).json(messages);
     } catch (error) {
       next(error);
     }

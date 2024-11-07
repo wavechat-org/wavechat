@@ -16,22 +16,6 @@ module.exports = {
       roomImg: {
         type: Sequelize.STRING,
       },
-      creatorId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
-      participantId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id",
-        },
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
