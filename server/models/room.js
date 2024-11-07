@@ -9,20 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Room.belongsTo(models.User, { foreignKey: "user1Id" });
-      Room.belongsTo(models.User, { foreignKey: "user2Id" });
+      Room.hasMany(models.Message, { foreignKey: "roomId" });
     }
   }
   Room.init(
     {
       roomName: DataTypes.STRING,
-      user1Id: DataTypes.INTEGER,
-      user2Id: DataTypes.INTEGER,
+      roomImg: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "Room",
     }
   );
+  Room.beforeCreate((room) => {
+    room.roomImg =
+      "https://w7.pngwing.com/pngs/562/813/png-transparent-computer-icons-discussion-group-reunion-miscellaneous-text-conversation.png";
+  });
   return Room;
 };

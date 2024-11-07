@@ -1,0 +1,32 @@
+[
+  {
+    "roomId": 1,
+    "userId": 1,
+    "content": "haii kaka"
+  },
+  {
+    "roomId": 1,
+    "userId": 2,
+    "content": "haii juga"
+  },
+  {
+    "roomId": 1,
+    "userId": 2,
+    "content": "haii kaka cantik"
+  },
+  {
+    "roomId": 2,
+    "userId": 3,
+    "content": "haii kaka"
+  },
+  {
+    "roomId": 2,
+    "userId": 3,
+    "content": "apa kabar nih?"
+  },
+  {
+    "roomId": 2,
+    "userId": 4,
+    "content": "baik juga ka"
+  }
+]

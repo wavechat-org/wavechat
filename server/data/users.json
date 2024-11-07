@@ -18,5 +18,25 @@
     "gender": "female",
     "createdAt": "2024-11-01T08:05:00Z",
     "updatedAt": "2024-11-01T08:05:00Z"
+  },
+  {
+    "id": 3,
+    "username": "david",
+    "email": "david@mail.com",
+    "password": "david",
+    "profileImg": "https://cdn.vectorstock.com/i/500p/53/42/user-member-avatar-face-profile-icon-vector-22965342.jpg",
+    "gender": "male",
+    "createdAt": "2024-11-01T08:05:00Z",
+    "updatedAt": "2024-11-01T08:05:00Z"
+  },
+  {
+    "id": 4,
+    "username": "sinta",
+    "email": "sinta@mail.com",
+    "password": "sinta",
+    "profileImg": "https://cdn.vectorstock.com/i/500p/53/42/user-member-avatar-face-profile-icon-vector-22965342.jpg",
+    "gender": "female",
+    "createdAt": "2024-11-01T08:05:00Z",
+    "updatedAt": "2024-11-01T08:05:00Z"
   }
 ]
