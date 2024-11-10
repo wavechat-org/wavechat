@@ -10,29 +10,32 @@ import ChatPage from "../views/ChatPage";
 import ProfilePage from "../views/ProfilePage";
 import Toastify from "toastify-js";
 
+// ---------------------cara 1--------------------------------------
 // Conditionally set the socket URL based on the environment
-const socketURL =
-  process.env.NODE_ENV === "production"
-    ? "https://wavechat.wijayacode.tech" // Production server URL
-    : "http://localhost:3000"; // Development server URL
+// const socketURL =
+//   process.env.NODE_ENV === "production"
+//     ? "https://wavechat.wijayacode.tech" // Production server URL
+//     : "http://localhost:3000"; // Development server URL
 
-const socket = io(socketURL, {
-  autoConnect: false, // You can choose to connect manually or automatically
-});
+// const socket = io(socketURL, {
+//   autoConnect: false, // You can choose to connect manually or automatically
+// });
 
-const base_url = socketURL; // Set base_url accordingly to match socket URL
+// const base_url = socketURL; // Set base_url accordingly to match socket URL
 
+// -------------------------cara 2----------------------------------
 // const socket = io("http://localhost:3000", {
 //   autoConnect: false,
 // });
 
 // const base_url = "http://localhost:3000";
 
-// const socket = io("https://wavechat.wijayacode.tech", {
-//   autoConnect: false,
-// });
+// -------------------------cara 3----------------------------------
+const socket = io("https://wavechat.wijayacode.tech", {
+  autoConnect: false,
+});
 
-// const base_url = "https://wavechat.wijayacode.tech";
+const base_url = "https://wavechat.wijayacode.tech";
 
 const router = createBrowserRouter([
   {
