@@ -10,7 +10,7 @@ import ChatPage from "../views/ChatPage";
 import ProfilePage from "../views/ProfilePage";
 import Toastify from "toastify-js";
 
-// ---------------------cara 1--------------------------------------
+// ---------------------cara 1 : bisa pilih development atau production tp not working--------------------------------------
 // Conditionally set the socket URL based on the environment
 // const socketURL =
 //   process.env.NODE_ENV === "production"
@@ -23,14 +23,14 @@ import Toastify from "toastify-js";
 
 // const base_url = socketURL; // Set base_url accordingly to match socket URL
 
-// -------------------------cara 2----------------------------------
+// -------------------------cara 2 : development env----------------------------------
 // const socket = io("http://localhost:3000", {
 //   autoConnect: false,
 // });
 
 // const base_url = "http://localhost:3000";
 
-// -------------------------cara 3----------------------------------
+// -------------------------cara 3 : jika sudah production (deploy server)----------------------------------
 const socket = io("https://wavechat.wijayacode.tech", {
   autoConnect: false,
 });
