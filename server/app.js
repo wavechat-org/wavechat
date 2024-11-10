@@ -11,21 +11,23 @@ const { createServer } = require("http");
 
 const port = process.env.PORT || 3000;
 // const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+const corsOrigin = ['http://localhost:5173', 'https://wavechat-gules.vercel.app'];
 
 const { Server } = require("socket.io");
 
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    // origin: corsOrigin,
-    origin: "http://localhost:5173",
-    origin: "http://wavechat-gules.vercel.app",
+    origin: corsOrigin,
+    // origin: ['http://localhost:5173', 'https://wavechat-gules.vercel.app'];
   },
 });
 
+// Use CORS middleware for the Express app
 // app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://wavechat-gules.vercel.app'],
+  origin: corsOrigin,
+  // origin: ['http://localhost:5173', 'https://wavechat-gules.vercel.app'],
 }));
 
 app.use(express.json());
