@@ -1,58 +1,71 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const express = require("express");
-const { createServer } = require("http");
 const app = express();
 const router = require("./routers/index");
-const port = 3000;
-const { Server } = require("socket.io");
+
 const cors = require("cors");
+const { createServer } = require("http");
+
+const port = process.env.PORT || 3000;
+const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+
+const { Server } = require("socket.io");
 
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: corsOrigin,
   },
 });
-app.use(cors());
+
+// Apply CORS settings in Express with same origin
+app.use(cors({
+  origin: corsOrigin
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(router);
 
 io.on("connection", (socket) => {
   console.log(socket.id);
-  socket.emit("welcome", "haii" + socket.id);
+  socket.emit("welcome", "Hello " + socket.id);
 
   socket.on("join:room", (roomId) => {
     socket.join(roomId);
-    // console.log(roomId, "ini join ");
+    console.log(`Joined room : ${roomId}`);
   });
 
+
   socket.on("message:new", ({ roomId, message, username }) => {
-    if (roomId || message) {
-      // Emit the new message to all clients in the specified roomId
-      io.to(roomId).emit("message:update", {
-        from: username || "Anonymous",
-        message,
-      });
-      console.log(
-        `Message from ${
-          socket.handshake.auth.username || "Anonymous"
-        } in roomId ${roomId}: ${message}`
-      );
-    } else {
-      console.log("Invalid message data received:", { roomId, message });
+    console.log("Received message:", { roomId, message, username });
+    if (!roomId || !message) {
+      console.log('Invalid message data:', { roomId, message })
+      return;
     }
+    // Emit the new message to all clients in the specified roomId
+    io.to(roomId).emit("message:update", {
+      from: username || "Anonymous",
+      message,
+    });
+
+    console.log(`Message from ${username || "Anonymous"} in roomId ${roomId}: ${message}`);
   });
 
   if (socket.handshake.auth) {
     console.log("username :" + socket.handshake.auth.username);
   }
-  return () => {
-    socket.off("message:update");
-    socket.disconnect();
-  };
-  // socket.on("")
+
+  // cleanup when socket disconnects
+  socket.on('disconnect', () => {
+    console.log(`Socket ${socket.id} disconnected`);
+  })
+
 });
 
 server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

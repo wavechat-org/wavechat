@@ -51,23 +51,6 @@ export default function LoginPage({ base_url }) {
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
-                htmlFor="username"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                onChange={(e) => setUsername(e.target.value)}
-                value={username}
-                required
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
                 htmlFor="email"
                 className="block text-gray-700 font-medium mb-2"
               >

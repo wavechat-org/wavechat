@@ -1,17 +1,19 @@
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import EmojiPicker from "emoji-picker-react";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 export default function ChatPage({ socket, base_url }) {
-  const [sendMessage, setSendMessage] = useState("");
-  const [message, setMessage] = useState([]);
+  const [sendMessage, setSendMessage] = useState(""); // Input message state
+  const [messages, setMessages] = useState([]); // Store chat messages as an array
   const { id } = useParams();
   const [room, setRoom] = useState({});
-  const navigate = useNavigate();
   const [profile, setProfile] = useState({});
-  console.log(profile);
+  const navigate = useNavigate();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Emoji picker visibility
+  const messageInputRef = useRef(); // For focusing the input field after emoji selection
 
+  // Fetch Room Data by ID
   async function fetchRoomById() {
     try {
       const { data } = await axios.get(`${base_url}/room/${id}`, {
@@ -25,6 +27,7 @@ export default function ChatPage({ socket, base_url }) {
     }
   }
 
+  // Fetch User Profile
   async function fetchProfile() {
     try {
       const { data } = await axios.get(`${base_url}/profile`, {
@@ -38,49 +41,62 @@ export default function ChatPage({ socket, base_url }) {
     }
   }
 
+  // Handle message send
   function handleSubmit(e) {
     e.preventDefault();
+    if (!sendMessage.trim()) return; // Prevent empty messages
+
     socket.emit("message:new", {
       roomId: id,
       message: sendMessage,
       username: profile.username,
     });
+
     setSendMessage(""); // Clear input after sending
   }
 
+  // Handle emoji selection
+  const handleEmojiClick = (emojiObject) => {
+    setSendMessage((prevMessage) => prevMessage + emojiObject.emoji); // Add emoji to the input field
+    setShowEmojiPicker(false); // Hide the emoji picker after emoji selection
+    messageInputRef.current.focus(); // Refocus the input field after selecting emoji
+  };
+
+  // Handle end chat
   function handleEndChat() {
-    navigate("/");
+    navigate("/"); // Navigate back to home or other page
   }
 
   useEffect(() => {
     fetchRoomById();
-    socket.emit("join:room", id);
-
     fetchProfile();
-  }, []);
-
-  useEffect(() => {
-    socket.auth = {
-      username: localStorage.username,
-    };
-    socket.connect();
-
-    socket.on("message:update", (newMessage) => {
-      console.log(newMessage, "ini message baru");
-      setMessage((current) => [...current, newMessage]);
-    });
+    socket.emit("join:room", id); // Join room when component loads
 
     return () => {
       socket.off("message:update");
-      socket.disconnect();
     };
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (profile.username) {
+      socket.auth = { username: profile.username };
+      socket.connect();
+
+      socket.on("message:update", (newMessage) => {
+        setMessages((current) => [...current, newMessage]); // Append new message to the array
+      });
+
+      return () => {
+        socket.off("message:update");
+      };
+    }
+  }, [profile, socket]);
 
   return (
     <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-base-200 text-gray-800 p-10">
       <div className="flex flex-col flex-grow w-full max-w-xl bg-base-100 shadow-xl rounded-lg overflow-hidden">
         {/* Room Name */}
-        <div className="text-center p-4  bg-blue-700 ">
+        <div className="text-center p-4 bg-blue-700">
           <h2 className="text-2xl font-semibold text-white">
             {room.roomName || "Loading room..."}
           </h2>
@@ -88,13 +104,13 @@ export default function ChatPage({ socket, base_url }) {
 
         {/* Message List */}
         <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-          {message.map((msg, index) => (
+          {messages.map((msg, index) => (
             <div
               key={index}
               className={
                 msg.from === profile.username
-                  ? "chat chat-start flex flex-col"
-                  : "chat chat-end flex flex-col"
+                  ? "chat chat-end flex flex-col"
+                  : "chat chat-start flex flex-col"
               }
             >
               <div>{msg.from === profile.username ? "You" : msg.from}</div>
@@ -105,6 +121,13 @@ export default function ChatPage({ socket, base_url }) {
           ))}
         </div>
 
+        {/* Show the emoji picker if toggled */}
+        {showEmojiPicker && (
+          <div className="emoji-picker">
+            <EmojiPicker onEmojiClick={handleEmojiClick} />
+          </div>
+        )}
+
         {/* Input Form */}
         <form className="bg-accent p-4 flex flex-row" onSubmit={handleSubmit}>
           <input
@@ -113,8 +136,20 @@ export default function ChatPage({ socket, base_url }) {
             className="flex items-center w-full rounded px-3"
             type="text"
             placeholder="Type your message…"
+            ref={messageInputRef} // Set reference to input
           />
-          <button className="btn btn-base-100 ml-4" type="submit">
+
+          {/* Emoji button */}
+          <button
+            type="button"
+            className="text-gray-500 ml-0.5"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          >
+            <span className="m-0.5 text-2xl">😊</span>
+          </button>
+
+          {/* Send button */}
+          <button className="btn btn-base-100 ml-0.5" type="submit">
             Send
           </button>
         </form>
