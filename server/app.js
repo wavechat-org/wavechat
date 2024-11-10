@@ -27,7 +27,6 @@ const io = new Server(server, {
 // app.use(cors());
 app.use(cors({
   origin: corsOrigin,
-  // origin: ['http://localhost:5173', 'https://wavechat-gules.vercel.app'],
 }));
 
 app.use(express.json());
