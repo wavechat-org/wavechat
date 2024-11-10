@@ -19,7 +19,7 @@ const io = new Server(server, {
   cors: {
     // origin: corsOrigin,
     origin: "http://localhost:5173",
-    origin: "https://wavechat-gules.vercel.app",
+    origin: "http://wavechat-gules.vercel.app",
   },
 });
 

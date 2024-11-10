@@ -10,17 +10,17 @@ import ChatPage from "../views/ChatPage";
 import ProfilePage from "../views/ProfilePage";
 import Toastify from "toastify-js";
 
-// const socket = io("https://wavechat.wijayacode.tech", {
-//   autoConnect: false,
-// });
-
-// const base_url = "https://wavechat.wijayacode.tech";
-
-const socket = io("http://localhost:3000", {
+const socket = io("http://wavechat.wijayacode.tech", {
   autoConnect: false,
 });
 
-const base_url = "http://localhost:3000";
+const base_url = "http://wavechat.wijayacode.tech";
+
+// const socket = io("http://localhost:3000", {
+//   autoConnect: false,
+// });
+
+// const base_url = "http://localhost:3000";
 
 const router = createBrowserRouter([
   {
