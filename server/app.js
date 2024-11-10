@@ -10,21 +10,20 @@ const cors = require("cors");
 const { createServer } = require("http");
 
 const port = process.env.PORT || 3000;
-const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
+// const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 const { Server } = require("socket.io");
 
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: corsOrigin,
+    // origin: corsOrigin,
+    origin: "http://localhost:5173",
+    origin: "https://wavechat-gules.vercel.app",
   },
 });
 
-// Apply CORS settings in Express with same origin
-app.use(cors({
-  origin: corsOrigin
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
